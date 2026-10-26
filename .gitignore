@@ -1,0 +1,9 @@
+# The original portfolio PDF has a phone number; the site uses the cleaned assets/Vishakha-Bharti-Portfolio.pdf
+_4th Year Portfolio_VISHAKHA .pdf
+# original SketchUp files (the published copies are in assets/models/skp/)
+/*.skp
+*.skb
+.claude/
+__pycache__/
+node_modules/
+dist/

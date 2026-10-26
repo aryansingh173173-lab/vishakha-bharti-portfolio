@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Vishakha Bharti — Architectural Portfolio</title>
+  <meta name="description" content="Beyond the Conventional — an interactive architectural journey by Vishakha Bharti, B.Arch, IIT Kharagpur. Beach resort, craft museum, community centre, working drawings and interiors.">
+  <meta name="theme-color" content="#1a1214">
+  <meta property="og:title" content="Vishakha Bharti — Architectural Portfolio">
+  <meta property="og:description" content="Beyond the Conventional. Scroll along a sunset cove to explore the work, or view the projects directly.">
+  <meta property="og:image" content="assets/img/resort-aerial.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&family=Montserrat:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body class="mode-intro">
+  <div id="sky-fallback" aria-hidden="true"></div>
+  <canvas id="world" aria-label="3D sunset cove. Scroll to travel along the shore; each project appears as you arrive."></canvas>
+  <div id="fade" aria-hidden="true"></div>
+
+  <!-- Intro + loading: a counter, a wall of hundreds of small pieces of the work, the name rising out of masks -->
+  <section id="intro" aria-labelledby="intro-title">
+    <canvas class="pl-mosaic" id="pl-mosaic" aria-hidden="true"></canvas>
+    <div class="pl-grain" aria-hidden="true"></div>
+    <header class="pl-top">
+      <span class="eyebrow">Architectural Portfolio</span>
+      <span class="eyebrow pl-tag">Beyond the Conventional</span>
+      <span class="eyebrow">2023 — 2026</span>
+    </header>
+    <h1 id="intro-title" class="pl-name" aria-label="Vishakha Bharti">
+      <span class="mask"><span class="pl-first">Vishakha</span></span>
+      <span class="mask"><span class="pl-last">BHARTI</span></span>
+    </h1>
+    <button class="pl-enter" id="btn-explore" type="button" disabled>
+      <span>Begin the journey</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <footer class="pl-bottom">
+      <div class="pl-status" aria-live="polite"><span id="loader-label">Loading</span></div>
+      <div class="pl-links">
+        <button id="btn-projects" class="pl-link" type="button">View projects</button>
+        <a class="pl-link" id="intro-pdf" href="assets/Vishakha-Bharti-Portfolio.pdf" download>Download PDF</a>
+        <span class="pl-hint" id="intro-hint">Sound on</span>
+      </div>
+      <div class="pl-count" aria-hidden="true"><span id="load-num">0</span><sup>%</sup></div>
+    </footer>
+    <div class="pl-cursor" id="pl-cursor" aria-hidden="true"><i></i></div>
+  </section>
+
+  <!-- 3D mode HUD -->
+  <header id="hud" aria-label="Journey controls">
+    <button class="wordmark" id="hud-home" type="button" aria-label="Back to start">Vishakha Bharti</button>
+    <nav class="hud-actions">
+      <button class="pill" id="hud-projects" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg><span>Projects</span></button>
+      <button class="pill" id="hud-about" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>About</span></button>
+      <button class="pill" id="hud-sound" type="button" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true" class="ico-on"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg><svg viewBox="0 0 24 24" aria-hidden="true" class="ico-off"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6"/></svg><span>Sound</span></button>
+      <button class="pill" id="hud-portfolio" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Portfolio view</span></button>
+    </nav>
+  </header>
+
+  <!-- Journey rail: a slim scroll track on the right; the red dot is where you are -->
+  <nav id="rail" aria-label="Journey along the shore">
+    <span class="rail-cue" aria-hidden="true">Scroll</span>
+    <div class="rail-track"><span class="rail-fill"></span><span class="rail-ghost"></span><span class="rail-dot"></span></div>
+  </nav>
+
+  <!-- Overview card: appears as you arrive at a project -->
+  <aside id="overview" class="glass" aria-live="polite" hidden></aside>
+
+  <!-- Finale at the pier: who this is, front and centre -->
+  <section id="finale" aria-labelledby="finale-title" hidden></section>
+
+  <!-- Full project / About sheet -->
+  <aside id="panel" class="glass" role="dialog" aria-modal="false" aria-labelledby="panel-title" hidden></aside>
+
+  <!-- Projects list (3D mode) -->
+  <div id="projects-overlay" role="dialog" aria-modal="true" aria-label="All projects" hidden></div>
+
+  <!-- Portfolio mode -->
+  <main id="portfolio" hidden></main>
+
+  <!-- Full-screen image viewer -->
+  <div id="viewer" role="dialog" aria-modal="true" aria-label="Image viewer" hidden></div>
+
+  <noscript>
+    <div class="noscript">
+      <h1>Vishakha Bharti — Architectural Portfolio</h1>
+      <p>This site needs JavaScript. You can still <a href="assets/Vishakha-Bharti-Portfolio.pdf">download the portfolio PDF</a>.</p>
+    </div>
+  </noscript>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
